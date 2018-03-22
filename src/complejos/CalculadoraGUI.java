@@ -1,7 +1,7 @@
 package complejos;
 
 
-import static com.sun.org.apache.xalan.internal.lib.ExsltMath.power;
+import general.MenuPrincipal;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -12,14 +12,19 @@ import static javax.swing.JOptionPane.showMessageDialog;
  */
 public class CalculadoraGUI extends javax.swing.JFrame {
     private Complejo resultado;
-    private char ultimaOperacion; 
     private ArrayList<Complejo> datos;
+    // Entrada actualizada es auxilar para no operar no perder el valor de entrada
+    // cuando está es trigonométrica o exponencial
+    private String forma, entradaActualizada;
+    private char operacionActual;
 
     public CalculadoraGUI() {
         initComponents();
         datos = new ArrayList<Complejo>();
         this.setTitle("Calculadora de números complejos");
         lblAlert.setText("");
+        forma = (String)cmbForma.getSelectedItem();
+        operacionActual = 'n'; // n de ninguna
     }
 
     @SuppressWarnings("unchecked")
@@ -28,25 +33,26 @@ public class CalculadoraGUI extends javax.swing.JFrame {
 
         jPanel1 = grafica.obtenerGrafica();
         jPanel2 = new javax.swing.JPanel();
-        Text = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        Resta = new javax.swing.JButton();
-        Retroceso = new javax.swing.JButton();
-        Multiplicacion = new javax.swing.JButton();
-        Division = new javax.swing.JButton();
-        Conjugado = new javax.swing.JButton();
-        Modulo = new javax.swing.JButton();
-        Igual = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        entrada = new javax.swing.JTextField();
+        historial = new javax.swing.JTextField();
+        btnResta = new javax.swing.JButton();
+        btnExp = new javax.swing.JButton();
+        btnMulti = new javax.swing.JButton();
+        btnDiv = new javax.swing.JButton();
+        btnConjugado = new javax.swing.JButton();
+        btnMod = new javax.swing.JButton();
+        btnIgual = new javax.swing.JButton();
+        btnBorrar = new javax.swing.JButton();
+        btnGraficar = new javax.swing.JButton();
         lblMessage = new javax.swing.JLabel();
-        Suma = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        forma = new javax.swing.JComboBox<>();
-        raices = new javax.swing.JButton();
+        btnSuma = new javax.swing.JButton();
+        btnReturnMain = new javax.swing.JButton();
+        cmbForma = new javax.swing.JComboBox<>();
+        btnRoots = new javax.swing.JButton();
         lblAlert = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -62,148 +68,148 @@ public class CalculadoraGUI extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(51, 51, 51));
         jPanel2.setForeground(new java.awt.Color(255, 255, 255));
 
-        Text.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        Text.addActionListener(new java.awt.event.ActionListener() {
+        entrada.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        entrada.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TextActionPerformed(evt);
+                entradaActionPerformed(evt);
             }
         });
 
-        jTextField2.setEditable(false);
-        jTextField2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextField2.setEnabled(false);
-        jTextField2.setFocusable(false);
-        jTextField2.setOpaque(false);
+        historial.setEditable(false);
+        historial.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        historial.setEnabled(false);
+        historial.setFocusable(false);
+        historial.setOpaque(false);
 
-        Resta.setBackground(new java.awt.Color(51, 51, 51));
-        Resta.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        Resta.setForeground(new java.awt.Color(255, 255, 255));
-        Resta.setText("-");
-        Resta.addActionListener(new java.awt.event.ActionListener() {
+        btnResta.setBackground(new java.awt.Color(51, 51, 51));
+        btnResta.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnResta.setForeground(new java.awt.Color(255, 255, 255));
+        btnResta.setText("-");
+        btnResta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RestaActionPerformed(evt);
+                btnRestaActionPerformed(evt);
             }
         });
 
-        Retroceso.setBackground(new java.awt.Color(51, 51, 51));
-        Retroceso.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        Retroceso.setForeground(new java.awt.Color(255, 255, 255));
-        Retroceso.setText("^");
-        Retroceso.addActionListener(new java.awt.event.ActionListener() {
+        btnExp.setBackground(new java.awt.Color(51, 51, 51));
+        btnExp.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnExp.setForeground(new java.awt.Color(255, 255, 255));
+        btnExp.setText("^");
+        btnExp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RetrocesoActionPerformed(evt);
+                btnExpActionPerformed(evt);
             }
         });
 
-        Multiplicacion.setBackground(new java.awt.Color(51, 51, 51));
-        Multiplicacion.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        Multiplicacion.setForeground(new java.awt.Color(255, 255, 255));
-        Multiplicacion.setText("X");
-        Multiplicacion.addActionListener(new java.awt.event.ActionListener() {
+        btnMulti.setBackground(new java.awt.Color(51, 51, 51));
+        btnMulti.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnMulti.setForeground(new java.awt.Color(255, 255, 255));
+        btnMulti.setText("X");
+        btnMulti.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MultiplicacionActionPerformed(evt);
+                btnMultiActionPerformed(evt);
             }
         });
 
-        Division.setBackground(new java.awt.Color(51, 51, 51));
-        Division.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        Division.setForeground(new java.awt.Color(255, 255, 255));
-        Division.setText("/");
-        Division.addActionListener(new java.awt.event.ActionListener() {
+        btnDiv.setBackground(new java.awt.Color(51, 51, 51));
+        btnDiv.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnDiv.setForeground(new java.awt.Color(255, 255, 255));
+        btnDiv.setText("/");
+        btnDiv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DivisionActionPerformed(evt);
+                btnDivActionPerformed(evt);
             }
         });
 
-        Conjugado.setBackground(new java.awt.Color(51, 51, 51));
-        Conjugado.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        Conjugado.setForeground(new java.awt.Color(255, 255, 255));
-        Conjugado.setText("Z'");
-        Conjugado.addActionListener(new java.awt.event.ActionListener() {
+        btnConjugado.setBackground(new java.awt.Color(51, 51, 51));
+        btnConjugado.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnConjugado.setForeground(new java.awt.Color(255, 255, 255));
+        btnConjugado.setText("Z'");
+        btnConjugado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ConjugadoActionPerformed(evt);
+                btnConjugadoActionPerformed(evt);
             }
         });
 
-        Modulo.setBackground(new java.awt.Color(51, 51, 51));
-        Modulo.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        Modulo.setForeground(new java.awt.Color(255, 255, 255));
-        Modulo.setText("|Z|");
-        Modulo.addActionListener(new java.awt.event.ActionListener() {
+        btnMod.setBackground(new java.awt.Color(51, 51, 51));
+        btnMod.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnMod.setForeground(new java.awt.Color(255, 255, 255));
+        btnMod.setText("|Z|");
+        btnMod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ModuloActionPerformed(evt);
+                btnModActionPerformed(evt);
             }
         });
 
-        Igual.setBackground(new java.awt.Color(51, 51, 51));
-        Igual.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        Igual.setForeground(new java.awt.Color(255, 255, 255));
-        Igual.setText("=");
-        Igual.addActionListener(new java.awt.event.ActionListener() {
+        btnIgual.setBackground(new java.awt.Color(51, 51, 51));
+        btnIgual.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnIgual.setForeground(new java.awt.Color(255, 255, 255));
+        btnIgual.setText("=");
+        btnIgual.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                IgualActionPerformed(evt);
+                btnIgualActionPerformed(evt);
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(51, 51, 51));
-        jButton1.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Borrar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnBorrar.setBackground(new java.awt.Color(51, 51, 51));
+        btnBorrar.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnBorrar.setForeground(new java.awt.Color(255, 255, 255));
+        btnBorrar.setText("Borrar");
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnBorrarActionPerformed(evt);
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(51, 51, 51));
-        jButton2.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Graficar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnGraficar.setBackground(new java.awt.Color(51, 51, 51));
+        btnGraficar.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnGraficar.setForeground(new java.awt.Color(255, 255, 255));
+        btnGraficar.setText("Graficar");
+        btnGraficar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnGraficarActionPerformed(evt);
             }
         });
 
         lblMessage.setForeground(new java.awt.Color(244, 7, 7));
 
-        Suma.setBackground(new java.awt.Color(51, 51, 51));
-        Suma.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        Suma.setForeground(new java.awt.Color(255, 255, 255));
-        Suma.setText("+");
-        Suma.addActionListener(new java.awt.event.ActionListener() {
+        btnSuma.setBackground(new java.awt.Color(51, 51, 51));
+        btnSuma.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnSuma.setForeground(new java.awt.Color(255, 255, 255));
+        btnSuma.setText("+");
+        btnSuma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SumaActionPerformed(evt);
+                btnSumaActionPerformed(evt);
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(51, 51, 51));
-        jButton4.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("IR A MENU");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnReturnMain.setBackground(new java.awt.Color(51, 51, 51));
+        btnReturnMain.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        btnReturnMain.setForeground(new java.awt.Color(255, 255, 255));
+        btnReturnMain.setText("Ir a menú");
+        btnReturnMain.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnReturnMainActionPerformed(evt);
             }
         });
 
-        forma.setBackground(new java.awt.Color(51, 51, 51));
-        forma.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
-        forma.setForeground(new java.awt.Color(255, 255, 255));
-        forma.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Algebraica", "Trigonometrica", "Exponencial" }));
-        forma.addActionListener(new java.awt.event.ActionListener() {
+        cmbForma.setBackground(new java.awt.Color(51, 51, 51));
+        cmbForma.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 18)); // NOI18N
+        cmbForma.setForeground(new java.awt.Color(255, 255, 255));
+        cmbForma.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Algebraica", "Trigonométrica", "Exponencial" }));
+        cmbForma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                formaActionPerformed(evt);
+                cmbFormaActionPerformed(evt);
             }
         });
 
-        raices.setBackground(new java.awt.Color(51, 51, 51));
-        raices.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        raices.setForeground(new java.awt.Color(255, 255, 255));
-        raices.setText("(z)^1/n");
-        raices.addActionListener(new java.awt.event.ActionListener() {
+        btnRoots.setBackground(new java.awt.Color(51, 51, 51));
+        btnRoots.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnRoots.setForeground(new java.awt.Color(255, 255, 255));
+        btnRoots.setText("(z)^1/n");
+        btnRoots.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                raicesActionPerformed(evt);
+                btnRootsActionPerformed(evt);
             }
         });
 
@@ -216,90 +222,89 @@ public class CalculadoraGUI extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblMessage))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(Suma, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(Multiplicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(Conjugado, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(Resta, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(Retroceso, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(raices, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(Division, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(Modulo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(Igual, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(forma, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(31, 31, 31))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(195, 195, 195)))))
+                                    .addComponent(lblAlert)
+                                    .addComponent(entrada, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGap(0, 0, Short.MAX_VALUE)
+                                    .addComponent(historial, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnSuma, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnMulti, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnConjugado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(btnResta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnDiv, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnMod, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                            .addComponent(btnExp, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(btnRoots, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                            .addComponent(btnIgual, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(btnBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(cmbForma, 0, 0, Short.MAX_VALUE)
+                                                .addComponent(btnGraficar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                        .addGap(23, 23, 23)
+                        .addComponent(lblMessage))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(btnReturnMain, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblAlert)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(Text, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblMessage)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(117, 117, 117)
+                        .addComponent(lblMessage))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(historial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(Text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(entrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblAlert)
-                        .addGap(4, 4, 4)))
-                .addGap(13, 13, 13)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Suma, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Retroceso, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Resta, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(raices, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(Multiplicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Division, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(Conjugado, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Modulo, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(Igual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(forma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
-                .addContainerGap(38, Short.MAX_VALUE))
+                        .addGap(17, 17, 17)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSuma, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnExp, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnResta, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnRoots, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnDiv, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnMulti, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnConjugado, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnMod, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(cmbForma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnBorrar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnGraficar))
+                            .addComponent(btnIgual, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnReturnMain)
+                .addGap(32, 32, 32))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -309,7 +314,7 @@ public class CalculadoraGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(117, 117, 117)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 414, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -320,199 +325,233 @@ public class CalculadoraGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // grafica.BorrarGrafica();
-        StringToReZImZ Separar = new StringToReZImZ();
-        Separar.Separar(Text.getText());
-        grafica.agregarGrafica(Text.getText(),Separar.getReZ(),Separar.getImZ());
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // Botón borrar
+    
+    /*Grafica solo elemento que está en la entrada siempre y cuando este sea válido*/
+    private void btnGraficarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGraficarActionPerformed
+        historial.setText("");
+        if(evaluador()) {
+            StringToReZImZ Separar = new StringToReZImZ();
+            Separar.Separar(entradaActualizada);
+            // System.out.println("Parte real: " + Separar.getReZ() + "\n" 
+                    // + "Parte imaginaria: " + Separar.getImZ());
+            grafica.agregarGrafica(entrada.getText(),Separar.getReZ(),Separar.getImZ());
+        }
+    }//GEN-LAST:event_btnGraficarActionPerformed
+    /* Botón de borrar: Limpia los jTextField (entrada e historial), además
+    limpia el arreglo de datos y no grafica nada */
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+        entrada.setText("");
+        historial.setText("");
+        // Para quitar el texto de error previo si existe
+        if(!lblAlert.getText().isEmpty()) lblAlert.setText("");
+        datos.clear();
         grafica.BorrarGrafica();
-        jTextField2.setText("");
-        Text.setText("");
-        resultado = null;
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnBorrarActionPerformed
 
-    private void IgualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IgualActionPerformed
-        // Boton de igual
+    // => BOTÓN IGUAL
+    private void btnIgualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIgualActionPerformed
         Complejo complejo;
-        prepararOperacion(ultimaOperacion, true);
-        if(ultimaOperacion != 'e') {
-            this.Text.setText(Operacion.mostrarNumero(resultado));
-            datos.add(resultado);
-            resultado = null;
-            //this.jTextField2.setText("");
-
-            for(Complejo e:datos){
-                grafica.agregarGrafica("Grafica",e.getParteReal(),e.getParteImaginaria());
+        boolean bandera = false;
+        
+        if(operacionActual == '^' && validarEntero(entrada.getText())) {
+            resultado = Operacion.potenciar(resultado, Integer.parseInt(entrada.getText()));
+            this.historial.setText(this.historial.getText() + entrada.getText());
+            entradaActualizada = Operacion.mostrarNumero(resultado);
+            this.entrada.setText(obtenerStringForma());
+            bandera = true;
+        }
+        else {
+            prepararOperacion(operacionActual);
+            if(operacionActual != 'n' && operacionActual != '^') {
+                if(forma == "Trigonométrica")
+                    this.entrada.setText(Operacion.mostrarFormaTrigonometrica(resultado));
+                else if(forma == "Exponencial")
+                    this.entrada.setText(Operacion.mostrarFormaExponencial(resultado));
+                else this.entrada.setText(Operacion.mostrarNumero(resultado));
+                bandera = true;
             }
         }
-    }//GEN-LAST:event_IgualActionPerformed
+        
+        if(bandera) {
+            datos.add(resultado);
+            resultado = null;
+            operacionActual = 'n';
 
-    private void ModuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModuloActionPerformed
-        this.Text.setText("");
-    }//GEN-LAST:event_ModuloActionPerformed
+            for(Complejo e:datos) {
+                grafica.agregarGrafica(Operacion.mostrarNumero(e),e.getParteReal(),
+                e.getParteImaginaria());
+            }
+        }
+        
+    }//GEN-LAST:event_btnIgualActionPerformed
 
-    private void ConjugadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConjugadoActionPerformed
-        String conjugado = this.Text.getText();
-        this.jTextField2.setText(conjugado);
-        this.Text.setText("");
-    }//GEN-LAST:event_ConjugadoActionPerformed
+    // => MÓDULO, se obtiene |z| de la entrada
+    private void btnModActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModActionPerformed
+        if(evaluador()) {
+            float[] parOrdenado = new float[2];
+            StringToReZImZ separacion = new StringToReZImZ();
+            parOrdenado = separacion.Separar(entradaActualizada);
+            Complejo c = new Complejo(parOrdenado[0], parOrdenado[1]);
+            historial.setText("Módulo |Z| = " + c.getModulo());
+        }
+    }//GEN-LAST:event_btnModActionPerformed
+
+    // Obtener el conjugado
+    private void btnConjugadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConjugadoActionPerformed
+        historial.setText("");
+        if(evaluador()) {
+            float[] parOrdenado = new float[2];
+            StringToReZImZ separacion = new StringToReZImZ();
+            parOrdenado = separacion.Separar(entradaActualizada);
+            Complejo c = new Complejo(parOrdenado[0], parOrdenado[1]);
+            c = Complejo.conjugar(c);
+            //System.out.println("Radio es: " + c.getModulo());
+            String resultado;
+            if(forma == "Trigonométrica") 
+                resultado = Operacion.mostrarFormaTrigonometrica(c);
+            else if(forma == "Exponencial")
+                resultado = Operacion.mostrarFormaExponencial(c);
+            else resultado = Operacion.mostrarNumero(c);
+            historial.setText("Ans: " + resultado);
+        }
+    }//GEN-LAST:event_btnConjugadoActionPerformed
 
      // => DIVISIÓN
-    private void DivisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DivisionActionPerformed
-        prepararOperacion('/',false);
-        ultimaOperacion = '/';
-    }//GEN-LAST:event_DivisionActionPerformed
+    private void btnDivActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDivActionPerformed
+        operacionActual = '/';
+        prepararOperacion('/');
+    }//GEN-LAST:event_btnDivActionPerformed
 
     // => MULTIPLICACIÓN
-    private void MultiplicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MultiplicacionActionPerformed
-        prepararOperacion('*',false);
-        ultimaOperacion = '*';
-    }//GEN-LAST:event_MultiplicacionActionPerformed
+    private void btnMultiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMultiActionPerformed
+        operacionActual = '*';
+        prepararOperacion('*');
+    }//GEN-LAST:event_btnMultiActionPerformed
 
-    private void RetrocesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RetrocesoActionPerformed
-    // potencia     
-//            ArrayList<String> resultado;
-//           StringToReZImZ Separar = new StringToReZImZ();
-//           String tx=Text.getText();
-//           int i;
-//           int j;
-//           float[] parOrdenado = Separar.Separar(tx);
-//           Complejo comp=new Complejo(parOrdenado[0], parOrdenado[1]);
-//         for ( i = 0; i < tx.length(); i++) {
-//            if(tx.charAt(i)=='^')break;
-//        }
-//         for ( j = 0; j < tx.length(); j++) {
-//            if(tx.charAt(j)=='/')break;
-//        }
-//         if(j>i&&j!=tx.length()){
-//             for (int k = j; k < tx.length(); k++) {
-//                if(tx.charAt(k)=='.'){
-//                    System.out.println("Error la raiz debe ser positiva");
-//                    break;
-//                } 
-//             }
-////   
-//          String ns=JOptionPane.showInputDialog("Escribe el valor de n");
-//           int n=Integer.parseInt(ns);
-//           resultado=Operacion.sacarRaices(comp, n);
-//           System.out.println("Estas son las raices"+resultado);
-//         }
-//        if(j==tx.length()||j<i){
-        StringToReZImZ Separar = new StringToReZImZ();
-          String tx=Text.getText();
-        prepararOperacion('^',false);
-        ultimaOperacion = '^';
-       Separar.Separar(Text.getText());
-       grafica.agregarGrafica(Text.getText(),Separar.getReZ(),Separar.getImZ());
-        //}        
-            //Aquí va la Exponenciación
-    }//GEN-LAST:event_RetrocesoActionPerformed
+    // => POTENCIA
+    private void btnExpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExpActionPerformed
+        if(operacionActual == 'n') {
+            historial.setText("");
+            operacionActual = '^';
+            prepararOperacion('^');
+        }
+    }//GEN-LAST:event_btnExpActionPerformed
+    
+    // => RESTAR
+    private void btnRestaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestaActionPerformed
+        operacionActual = '-';
+        prepararOperacion('-');
+    }//GEN-LAST:event_btnRestaActionPerformed
 
-    private void RestaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestaActionPerformed
-
-    }//GEN-LAST:event_RestaActionPerformed
-
-    private void TextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextActionPerformed
-        if(!lblMessage.getText().isEmpty()) lblMessage.setText("");
-    }//GEN-LAST:event_TextActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void formaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formaActionPerformed
+    private void entradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entradaActionPerformed
         
-        int f=0;
-           StringToReZImZ Separar = new StringToReZImZ();
-       Separar.Separar(Text.getText());
-        String m=Text.getText();
-        float[] parOrdenado = Separar.Separar(m);
-        Complejo complejo = new Complejo(parOrdenado[0], parOrdenado[1]);
-        String item=(String) forma.getSelectedItem();
-        float ang=complejo.getAngulo();
-         float mod=complejo.getModulo();
-        for(int i=0;i<50;i++){
-            if(m.charAt(i)=='c')f=1;
-            if(m.charAt(i)=='e')f=2;
-            else f=3;                 
-        }
-        if(item.equals("Algebraico")&&f==3){
-          jTextField2.setText("z="+m);
-        }
-        if(item.equals("Algebraico")&&f==1){
-           jTextField2.setText("z="+mod+"(cos("+ang+")+isen("+ang+"))");
-       }
-        if(item.equals("Algebraico")&&f==2){
-           jTextField2.setText("z="+mod+"(e^i"+ang);
-       }
-        if(item.equals("Trigonometrica")&&f==1){
-          jTextField2.setText("z="+m);
-        }
-         if(item.equals("Trigonometrica")&&f==3){
-          Convertidor.deTrigonometricaAAlgebraica(m);
-        }
-          if(item.equals("Exponencial")&&f==2){
-          jTextField2.setText("z="+m);
-        }
-          if(item.equals("Exponencial")&&f==3){
-          Convertidor.deExponencialAAlgebraica(m);
-        }
+    }//GEN-LAST:event_entradaActionPerformed
 
-        // TODO add your handling code here:
-    }//GEN-LAST:event_formaActionPerformed
+    private void btnReturnMainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnMainActionPerformed
+        MenuPrincipal mp = new MenuPrincipal();
+        mp.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnReturnMainActionPerformed
 
-    private void raicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raicesActionPerformed
-           
-            ArrayList<String> resultado;
-           StringToReZImZ Separar = new StringToReZImZ();
-           String tx=Text.getText();
-           float[] parOrdenado = Separar.Separar(tx);
-           Complejo comp=new Complejo(parOrdenado[0], parOrdenado[1]);
-       
-           String ns=JOptionPane.showInputDialog("Escribe el valor de n");
-           int n=Integer.parseInt(ns);
-           resultado=Operacion.sacarRaices(comp, n);
-           System.out.println("Estas son las raices"+resultado);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_raicesActionPerformed
-
-    private void SumaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SumaActionPerformed
-prepararOperacion('+',false);
-         ultimaOperacion = '+';
-         // TODO add your handling code here:
-    }//GEN-LAST:event_SumaActionPerformed
-
-   
-    // Esta función retorna verdadero si el número complejo introducido es genuino
-    private boolean evaluador() {
-        boolean respuesta = true; 
-        String entrada = this.Text.getText();
+    
+    /* Cambia el valor de forma (nos servirá para saber con que se está trabajando)
+    dependiendo del valor que seleccione el usuario. */
+    // Automáticamente hace la conversión a la nueva forma seleccionada
+    private void cmbFormaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFormaActionPerformed
+        String formaAnterior = forma;
+        forma = (String)cmbForma.getSelectedItem();
+        
+        if(this.entrada.getText() == "") return;
+        entradaActualizada = this.entrada.getText();
         
         // Para quitar el texto de error previo si existe
         if(!lblAlert.getText().isEmpty()) lblAlert.setText("");
         
-        entrada = StringToReZImZ.validar(entrada);
+        if(formaAnterior == "Trigonométrica") 
+            entradaActualizada = Convertidor.deTrigonometricaAAlgebraica(entradaActualizada);
+        else if(formaAnterior == "Exponencial") {
+            entradaActualizada = Convertidor.deExponencialAAlgebraica(entradaActualizada);
+        }
         
-        if(entrada.contains("Error")) {
-            lblAlert.setText(entrada);
+        //Se valida en la forma algebraica
+        entradaActualizada = StringToReZImZ.validar(entradaActualizada);
+        
+        if(entradaActualizada.contains("Error")) {
+            lblAlert.setText(entradaActualizada);
+            return;
+        }
+        
+        float[] parOrdenado = new float[2];
+        StringToReZImZ separacion = new StringToReZImZ();
+        parOrdenado = separacion.Separar(entradaActualizada);
+        Complejo c = new Complejo(parOrdenado[0], parOrdenado[1]);
+        
+        if(forma == "Algebraica") {
+            this.entrada.setText(Operacion.mostrarNumero(c));
+        }
+        else if(forma == "Trigonométrica") {
+            this.entrada.setText(Operacion.mostrarFormaTrigonometrica(c));
+        }
+        else if(forma == "Exponencial") {
+            this.entrada.setText(Operacion.mostrarFormaExponencial(c));
+        }
+    }//GEN-LAST:event_cmbFormaActionPerformed
+
+    
+    // => RAÍCES
+    private void btnRootsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRootsActionPerformed
+        if(evaluador()) {
+            historial.setText("");
+            DialogRaiz r = new DialogRaiz(this, true, entradaActualizada, this);
+            r.setLocationRelativeTo(this);
+            r.setVisible(true);
+        }
+    }//GEN-LAST:event_btnRootsActionPerformed
+
+    // => SUMA
+    private void btnSumaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSumaActionPerformed
+        operacionActual = '+';
+        prepararOperacion('+');
+    }//GEN-LAST:event_btnSumaActionPerformed
+
+    // Esta función retorna verdadero si el número complejo introducido es genuino
+    private boolean evaluador() {
+        boolean respuesta = true;
+        entradaActualizada = this.entrada.getText();
+        
+        if(entradaActualizada == "") return false;
+        
+        // Para quitar el texto de error previo si existe
+        if(!lblAlert.getText().isEmpty()) lblAlert.setText("");
+        
+        if(forma == "Trigonométrica") 
+            entradaActualizada = Convertidor.deTrigonometricaAAlgebraica(entradaActualizada);
+        else if(forma == "Exponencial") {
+            entradaActualizada = Convertidor.deExponencialAAlgebraica(entradaActualizada);
+        }
+        
+        entradaActualizada = StringToReZImZ.validar(entradaActualizada);
+        
+        if(entradaActualizada.contains("Error")) {
+            lblAlert.setText(entradaActualizada);
             respuesta = false;
         }
 
         return respuesta;
     }
     
-    private void prepararOperacion(char operador, boolean isEqual) {
-        String cadena = this.Text.getText();
+    private void prepararOperacion(char operador) {
         
         if(evaluador()) { // La entrada es válida
             StringToReZImZ separador = new StringToReZImZ();
-            float[] parOrdenado = separador.Separar(cadena);
+            //En el evaluador se define entrada actualizada como un string
+            // del complejo en la forma algebraica.
+            
+            // Separamos dicho String
+            float[] parOrdenado = separador.Separar(entradaActualizada);
+            
             // dos números afectados por una operación
-            if(!this.jTextField2.getText().isEmpty()) {
+            if(!this.historial.getText().isEmpty() && resultado != null) {
                 Complejo complejo = new Complejo(parOrdenado[0], parOrdenado[1]);
                 datos.add(complejo);
                 resultado = realizarOperacion(operador, resultado, complejo);
@@ -520,51 +559,57 @@ prepararOperacion('+',false);
             else { // es el primer número introducido
                 resultado = new Complejo(parOrdenado[0], parOrdenado[1]);
                 datos.add(resultado);
+                historial.setText("");
             }
+            
             // Limpiamos la entrada y actualizamos el historial
-            if(isEqual) operador = '=';
-            this.jTextField2.setText(this.jTextField2.getText() + "(" + this.Text.getText() 
-                    + ") " + operador + " ");
-            this.Text.setText("");
-            ultimaOperacion = operador;
-        }
-        else {
-            cadena = StringToReZImZ.validar(cadena);
-            // Dado que la expresión es inválida mostramos el error en el label
-            lblAlert.setText(cadena);
-            // si no se puede efectuar la última operación
-            ultimaOperacion = 'e';
-        }  
+            if(operador != '=') {
+                if(operador == 'n') operador = ' ';
+                this.historial.setText(this.historial.getText() + "(" + 
+                this.entrada.getText() + ") " + operador + " ");
+                this.entrada.setText("");
+            }
+        } 
     }
     
-    private Complejo realizarOperacion(char op, Complejo resultado, Complejo complejo) {
-          ArrayList<String> compl;
-        if(op == '+') return Operacion.sumar(resultado, complejo);
-        else if(op == '-') return Operacion.restar(resultado, complejo);
-        else if(op == '*') return Operacion.multiplicar(resultado, complejo);
-        else if(op == '/') return Operacion.dividir(resultado, complejo);
-              else if(op == '^') {
-              if(Text.getText().contains("/")) {
-              String Exponentes[] = Text.getText().split("/");
-                  int expNumerador = Integer.parseInt(Exponentes[0]); 
-                  int expDenominador = Integer.parseInt(Exponentes[1]); 
-                 resultado=Operacion.potenciar(resultado,expNumerador);
-//                String[] stringArray = list.toArray(new String[0]); 
-                  
+    // Llamado a los métodos para resolver las operaciones básicas
+    private Complejo realizarOperacion(char operador, Complejo resultado, Complejo complejo) {
+        if(operador == '+') return Operacion.sumar(resultado, complejo);
+        else if(operador == '-') return Operacion.restar(resultado, complejo);
+        else if(operador == '*') return Operacion.multiplicar(resultado, complejo);
+        else return Operacion.dividir(resultado, complejo);
+    }
+    
+    private boolean validarEntero(String cadena) {
+	try {
+            Integer.parseInt(cadena);
+            return true;
+	} catch (NumberFormatException nfe){
+            return false;
+	}
+    }
+    
+    private String obtenerStringForma() {
+        String representacion;
+        if(forma == "Trigonométrica") 
+            representacion = Convertidor.deTrigonometricaAAlgebraica(entradaActualizada);
+        else if(forma == "Exponencial")
+            representacion = Convertidor.deExponencialAAlgebraica(entradaActualizada);
+        else representacion = entradaActualizada;
+        
+        return representacion;
+    }
+    
+    public void graficarRaices(ArrayList<Complejo> raices) {
+        datos.clear();
+        datos = raices;
+        resultado = null;
+        operacionActual = 'n';
 
-              
-                  compl = Operacion.sacarRaices(resultado, expDenominador);
-                  String[] stringArray=compl.toArray(new String[0]);
-                  
-              }  
-              else {
-                      
-                  return Operacion.potenciar(resultado,Integer.parseInt(Text.getText()));
-              }
-               return resultado;
+        for(Complejo e:datos) {
+            grafica.agregarGrafica(Operacion.mostrarFormaExponencial(e),e.getParteReal(),
+            e.getParteImaginaria());
         }
-       
-              else return resultado;
     }
     
     public static void main(String args[]) {
@@ -602,27 +647,27 @@ prepararOperacion('+',false);
         });
     }
     
-    GraficarC grafica= new GraficarC();
+    GraficarC grafica = new GraficarC();
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Conjugado;
-    private javax.swing.JButton Division;
-    private javax.swing.JButton Igual;
-    private javax.swing.JButton Modulo;
-    private javax.swing.JButton Multiplicacion;
-    private javax.swing.JButton Resta;
-    private javax.swing.JButton Retroceso;
-    private javax.swing.JButton Suma;
-    private javax.swing.JTextField Text;
-    private javax.swing.JComboBox<String> forma;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnBorrar;
+    private javax.swing.JButton btnConjugado;
+    private javax.swing.JButton btnDiv;
+    private javax.swing.JButton btnExp;
+    private javax.swing.JButton btnGraficar;
+    private javax.swing.JButton btnIgual;
+    private javax.swing.JButton btnMod;
+    private javax.swing.JButton btnMulti;
+    private javax.swing.JButton btnResta;
+    private javax.swing.JButton btnReturnMain;
+    private javax.swing.JButton btnRoots;
+    private javax.swing.JButton btnSuma;
+    private javax.swing.JComboBox<String> cmbForma;
+    private javax.swing.JTextField entrada;
+    private javax.swing.JTextField historial;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel lblAlert;
     private javax.swing.JLabel lblMessage;
-    private javax.swing.JButton raices;
     // End of variables declaration//GEN-END:variables
 }

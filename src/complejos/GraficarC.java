@@ -40,7 +40,7 @@ public class GraficarC {
     }
   
     public void BorrarGrafica() {
-
+        datos.removeAllSeries();
     }
 
     public JPanel obtenerGrafica() {

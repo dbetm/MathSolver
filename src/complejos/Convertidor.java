@@ -42,15 +42,12 @@ public abstract class Convertidor {
         // ### FILTROS ###
         // No debe tener caracteres raros
         if (tieneCaracteresRaros) {
-            System.out.println("Caracteres raros");
             return false;
         } // El mínimo de carácteres es 14 => cos(1)+isin(0)
         else if (cadena.length() < 14) {
-            System.out.println("Longitud");
             return false;
         } // Debe tener un cos y un sin
         else if (!cadena.contains("cos") && (!cadena.contains("sin") || !cadena.contains("sen"))) {
-            System.out.println("funciones");
             return false;
         } 
         // Debe tener una i o una j
@@ -60,7 +57,7 @@ public abstract class Convertidor {
         else if (((int) cadena.charAt(0) > 47 && (int) cadena.charAt(0) < 58)
                 || (int) cadena.charAt(0) == 46 || (int) cadena.charAt(0) == 45) {
             int numParentesis = 0;
-            // System.out.println("r diferente de 1");
+            
             for (int i = 0; i < cadena.length(); i++) {
                 if ((int) cadena.charAt(i) == 40 || (int) cadena.charAt(i) == 41
                         || (int) cadena.charAt(i) == 91 || (int) cadena.charAt(i) == 93) {
@@ -72,7 +69,7 @@ public abstract class Convertidor {
             }
         } // Debe tener 4 paréntesis cuando r es 1 y no lo pusieron
         else if ((int) cadena.charAt(0) == 'c') {
-            System.out.println("R es 1");
+            //System.out.println("R es 1");
             int numParentesis = 0;
             for (int i = 0; i < cadena.length(); i++) {
                 if ((int) cadena.charAt(i) == 40 || (int) cadena.charAt(i) == 41) {
@@ -185,13 +182,13 @@ public abstract class Convertidor {
         angulo = angulo.replace("(", "");
         r = r.replace("(", "");
         r = r.replace("[", "");
-        System.out.println("Ángulo: " + angulo + "\nr: " + r);
-        System.out.println(complejo);
+        //System.out.println("Ángulo: " + angulo + "\nr: " + r);
         
         // que esté vació significa que en teoría no es una
         // expresión inválida.
         if (complejo.isEmpty()) { 
             complejo = conformarConversion(complejo, r, angulo);
+            
         }
 
         return complejo;
@@ -280,9 +277,9 @@ public abstract class Convertidor {
                         solucion = "Expresión inválida 2";
                 }
                 else {
-                    if(((int)numero.charAt(3) > 47 && (int)numero.charAt(3) < 58) ||
-                        numero.charAt(3) == '.') {
-                        int i = 3;
+                    if(((int)numero.charAt(4) > 47 && (int)numero.charAt(4) < 58) ||
+                        numero.charAt(4) == '.' || numero.charAt(4) == '-') {
+                        int i = 4;
                         while (((int)numero.charAt(i) > 47 && (int)numero.charAt(i) < 58)
                             || numero.charAt(i) == '.') {
                             if (i > numero.length() - 1) {
@@ -319,9 +316,9 @@ public abstract class Convertidor {
                             || numero.charAt(i+2) == 'j' || numero.charAt(i+2) == '(')) {
                         if (numero.charAt(i+2) == 'i' || numero.charAt(i+2) == 'j') {
                             System.out.println(numero.charAt(i+3));
-                            if (((int) numero.charAt(i+3) > 47 && (int) numero.charAt(i+3) < 58)
-                                    || numero.charAt(i+3) == '.') {
-                                i += 3;
+                            if (((int) numero.charAt(i+4) > 47 && (int) numero.charAt(i+4) < 58)
+                                    || numero.charAt(i+4) == '.' || numero.charAt(i+4) == '-') {
+                                i += 4;
                                 while (i < numero.length()) {
                                     angulo += numero.charAt(i);
                                     i++;
@@ -331,12 +328,12 @@ public abstract class Convertidor {
                             }
                         } else {
                             i++;
-                            System.out.println("=> " + numero.charAt(i+3));
+                            //System.out.println("=> " + numero.charAt(i+3));
                             if (((int) numero.charAt(i+3) > 47 && (int) numero.charAt(i+3) < 58)
                                     || numero.charAt(i+3) == '.') {
                                 i += 3;
                                 while (((int) numero.charAt(i) > 47 && (int) numero.charAt(i) < 58)
-                                        || numero.charAt(i) == '.') {
+                                        || numero.charAt(i) == '.' || numero.charAt(4) == '-') {
                                     if (i > numero.length() - 1) {
                                         solucion = "Expresión inválida 9";
                                         break;
@@ -356,8 +353,14 @@ public abstract class Convertidor {
                 solucion = "Expresión inválida 12";
         }
         
+        angulo = angulo.replace(")", "");
+        r = r.replace(")", "");
+        r = r.replace("]", "");
+        System.out.println(">>> R: " + r + " Ángulo: " + angulo);
+        
         if(solucion.isEmpty()) {
             solucion = conformarConversion(solucion, r, angulo);
+            // System.out.println("Solución es " + solucion);
         }
         return solucion;
     }
@@ -372,12 +375,10 @@ public abstract class Convertidor {
     private static float intelRound(float n) {
         float nRounded = Math.round(n);
         
-        if(Math.abs( - nRounded) < 0.05 && nRounded != 0) {
-            n = nRounded;
-        }
+        if(Math.abs(nRounded) < 0.05 && nRounded != 0) n = nRounded;
         
         // Si se redondean y queda un valor muy pequeño se representa con 0
-        if(n < 0.01) n = 0;
+        if(Math.abs(n) < 0.01) n = 0;
         
         return n;
     }
@@ -403,9 +404,11 @@ public abstract class Convertidor {
         }
         if (bandera1 && bandera2) {
             float x = (float) (modulo * Math.cos(ang));
+            System.out.println("X vale: " + x);
             //redondeo inteligente
             x = intelRound(x);
             float y = (float) (modulo * Math.sin(ang));
+            System.out.println("Y vale: " + y);
             y = intelRound(y);
 
             solucion = String.format("%.2f", x);

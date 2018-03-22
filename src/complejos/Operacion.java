@@ -66,34 +66,63 @@ public class Operacion {
         return new Complejo(resReal, resImaginario);
     }
     
-    // ============== POTENCIA
+    // ============== POTENCIA, se usa la fórmula de Moivre.
     public static Complejo potenciar(Complejo complejo, int exp) {
         float angulo = complejo.getAngulo() * exp;
         float modulo = (float)Math.pow(complejo.getModulo(),exp);
         StringToReZImZ separador = new StringToReZImZ();
         float[] parOrdenado = new float[2];
      
-        String formaTri = "("+modulo+")"+"(cos("+angulo+")+isen("+angulo+"))";
+        String formaTri = modulo+"(cos("+angulo+")+isen("+angulo+"))";
+        System.out.println("\nForma trigonométrica: " + formaTri);
         String formaAlgebraica = Convertidor.deTrigonometricaAAlgebraica(formaTri);
-        
+        System.out.println("Fase 1");
         parOrdenado = separador.Separar(formaAlgebraica);
         
         return new Complejo(parOrdenado[0], parOrdenado[1]);
     }
     
     // ============== RAÍCES
-    public static ArrayList<String> sacarRaices(Complejo complejo,int n){
-        ArrayList<String> resultado=null;
-        float pi=(float) Math.PI;
+    public static ArrayList<Complejo> sacarRaices(Complejo complejo, int n) {
+//        System.out.println("Complejo es: " + Operacion.mostrarNumero(complejo));
+//        System.out.println("N es: " + n);
+        // Para guardar las raíces en Strings de la forma algebraica
+        ArrayList<String> strRaices = new ArrayList<>();
+        // Para guardar la raíces en objetos "Complejo"
+        ArrayList<Complejo> resultado = new ArrayList<>();
+        // Guardar los ángulos
+        ArrayList<Float> angulos = new ArrayList<>();
+        Complejo c;
+        float angulo, modulo;
+        String formaTri, formaAlgebraica;
+        float[] parOrdenado = new float[2];
+        StringToReZImZ separacion;
         
-        for(int i = 0;i < n;i++){
-            float angulo = (complejo.getAngulo()+2*i*pi)/n;
-            float modulo = (float)Math.pow(complejo.getModulo(),1/n);
-            String formaTri = "(" + modulo + ")" + "(cos(" + angulo + ")+isen(" + angulo+"))";
-            String formaAlgebraica = Convertidor.deTrigonometricaAAlgebraica(formaTri);
-            resultado.add("w[" + i + "]=" + formaAlgebraica);
+        
+        // Generamos la n-1 raíces y convertimos cada una a trigonométrica
+        for(int k = 0;k < n;k++) { // 2pi = 360°
+            angulo = (complejo.getAngulo() + (360f * k)) / n;
+            modulo = (float)Math.pow(complejo.getModulo(), 1f / n); 
+            //System.out.println("Ángulo es: " + angulo);
+            angulos.add(angulo);
+            formaTri = modulo+"(cos("+angulo+")+isen("+angulo+"))";
+            System.out.println("Forma tri: " + formaTri); 
+            formaAlgebraica = Convertidor.deTrigonometricaAAlgebraica(formaTri);
+            System.out.println("Forma algebraica: " + formaAlgebraica);
+            strRaices.add(formaAlgebraica);
         }
-        return resultado;    
+        
+        // Generamos n-1 complejos : n-1 raíces almacenadas anteriormente
+        for (int i = 0; i < strRaices.size(); i++) {
+            separacion = new StringToReZImZ();
+            //System.out.println("Str raíz: " + strRaiz);
+            parOrdenado = separacion.Separar(strRaices.get(i));
+            c = new Complejo(parOrdenado[0], parOrdenado[1]);
+            c.setAngulo(angulos.get(i));
+            resultado.add(c);
+        }
+
+        return resultado;  
     }
     
     // Genera una string con la representación de un número complejo => x + iy
@@ -114,7 +143,7 @@ public class Operacion {
         String numero, r, angulo;
         r = String.format("%.2f", complejo.getModulo());
         angulo = String.format("%.2f", complejo.getAngulo());
-        numero = r + "[cos(" + angulo + "°) + isen(" + angulo + "°)]";
+        numero = r + "[cos(" + angulo + ") + isen(" + angulo + ")]";
         return numero;
     }
     
@@ -123,7 +152,7 @@ public class Operacion {
         String numero, r, angulo;
         r = String.format("%.2f", complejo.getModulo());
         angulo = String.format("%.2f", complejo.getAngulo());
-        numero = r + "e^i" + angulo;  
+        numero = r + "e^i(" + angulo + ")";  
         return numero;
     }
 }

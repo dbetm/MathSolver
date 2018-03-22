@@ -141,6 +141,7 @@ public class StringToReZImZ {
         // asignamos a las dos posiciones del arreglo, la parte real e imaginaria
         complejoSeparado[0] = ReZ;
         complejoSeparado[1] = ImZ;
+        
         return complejoSeparado;
     }
     
@@ -240,7 +241,7 @@ public class StringToReZImZ {
     // TESTEO
     public static void main(String[] args){
         StringToReZImZ lol = new StringToReZImZ(); 
-        String cadena = " 7 i - 65.4   pato ";
+        String cadena = "0.71+i0.71";
         
         cadena = StringToReZImZ.validar(cadena);
         

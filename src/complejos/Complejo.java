@@ -19,6 +19,10 @@ public class Complejo {
     public Complejo(float parteReal, float parteImaginaria) {
         this.parteReal = parteReal;
         this.parteImaginaria = parteImaginaria;
+        System.out.println("Real: " + parteReal);
+        System.out.println("Imaginaria: " + parteImaginaria);
+        calcularAngulo();
+        calcularModulo();
     }
     
     // Para obtener el conjugado de un número complejo 
@@ -39,6 +43,7 @@ public class Complejo {
         if(parteReal == 0) {
             angulo = 90;
         }
+        // NOTA: Hay casos donde falla
         else {
             angulo = (float)Math.toDegrees(Math.atan(parteImaginaria / parteReal));
         }
@@ -68,5 +73,9 @@ public class Complejo {
     
     public float getAngulo() {
         return angulo;
+    }
+    
+    public void setAngulo(float angulo) {
+        this.angulo = angulo;
     }
 }
