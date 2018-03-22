@@ -548,6 +548,7 @@ public class CalculadoraGUI extends javax.swing.JFrame {
             // del complejo en la forma algebraica.
             
             // Separamos dicho String
+            System.out.println("Entrada actualizada: " + entradaActualizada);
             float[] parOrdenado = separador.Separar(entradaActualizada);
             
             // dos números afectados por una operación

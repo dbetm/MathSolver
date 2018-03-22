@@ -13,10 +13,23 @@ public class StringToReZImZ {
     StringToReZImZ() {}
 
     public float[] Separar(String cadena){
-    
         String aux;
         float[] complejoSeparado = new float[2];
-      
+        
+        if(cadena.length() == 1 && cadena.contains("i")) {
+            complejoSeparado[0] = 0;
+            complejoSeparado[1] = 1;
+            ReZ = 0;
+            ImZ = 1;
+            return complejoSeparado;
+        }
+        if(cadena == "-i") {
+            complejoSeparado[0] = 0;
+            complejoSeparado[1] = -1;
+            ReZ = 0;
+            ImZ = -1;
+            return complejoSeparado;
+        }
       
         //Primero leemos la cadena 
         //Separamos la parte Real y la imaginaria
@@ -25,10 +38,10 @@ public class StringToReZImZ {
                 if(cadena.contains("i")) { // -i
                     ImZ = -1; 
                     ReZ = 0; 
-                }else{ //-n, donde n={1,2,3,4,5,6,7,8,9} y nada más
+                }else { //-n, donde n={1,2,3,4,5,6,7,8,9} y nada más
                     ImZ = 0; 
                     ReZ = Float.parseFloat(cadena); 
-              }
+                }
             }else {
                 //La cadena mide más de 2
                 int NumeroDeMenos = cadena.length()
@@ -241,14 +254,17 @@ public class StringToReZImZ {
     // TESTEO
     public static void main(String[] args){
         StringToReZImZ lol = new StringToReZImZ(); 
-        String cadena = "0.71+i0.71";
+        String cadena = "i";
         
         cadena = StringToReZImZ.validar(cadena);
         
         if(cadena.contains("Error")) {
             System.out.println(cadena);
         }
-        else lol.Separar(cadena);
+        else {
+            float[] partes = lol.Separar(cadena);
+            System.out.println(partes[0] + "\n" + partes[1]);
+        }
     }
     
 }

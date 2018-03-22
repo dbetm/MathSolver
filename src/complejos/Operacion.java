@@ -91,7 +91,7 @@ public class Operacion {
         // Para guardar la raíces en objetos "Complejo"
         ArrayList<Complejo> resultado = new ArrayList<>();
         // Guardar los ángulos
-        ArrayList<Float> angulos = new ArrayList<>();
+        //ArrayList<Float> angulos = new ArrayList<>();
         Complejo c;
         float angulo, modulo;
         String formaTri, formaAlgebraica;
@@ -104,11 +104,11 @@ public class Operacion {
             angulo = (complejo.getAngulo() + (360f * k)) / n;
             modulo = (float)Math.pow(complejo.getModulo(), 1f / n); 
             //System.out.println("Ángulo es: " + angulo);
-            angulos.add(angulo);
+            //angulos.add(angulo);
             formaTri = modulo+"(cos("+angulo+")+isen("+angulo+"))";
-            System.out.println("Forma tri: " + formaTri); 
+            //System.out.println("Forma tri: " + formaTri); 
             formaAlgebraica = Convertidor.deTrigonometricaAAlgebraica(formaTri);
-            System.out.println("Forma algebraica: " + formaAlgebraica);
+            //System.out.println("Forma algebraica: " + formaAlgebraica);
             strRaices.add(formaAlgebraica);
         }
         
@@ -118,7 +118,6 @@ public class Operacion {
             //System.out.println("Str raíz: " + strRaiz);
             parOrdenado = separacion.Separar(strRaices.get(i));
             c = new Complejo(parOrdenado[0], parOrdenado[1]);
-            c.setAngulo(angulos.get(i));
             resultado.add(c);
         }
 

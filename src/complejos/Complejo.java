@@ -40,12 +40,13 @@ public class Complejo {
     
     // Para calcular el angulo
     private void calcularAngulo() {
-        if(parteReal == 0) {
-            angulo = 90;
-        }
-        // NOTA: Hay casos donde falla
-        else {
+        if(parteReal > 0 || parteReal < 0) {
             angulo = (float)Math.toDegrees(Math.atan(parteImaginaria / parteReal));
+            if(parteReal < 0) angulo += 180;
+        }
+        else if(parteReal == 0) {
+            if(parteImaginaria < 0) angulo = -90;
+            else if(parteImaginaria > 0) angulo = 90;
         }
     }
     
@@ -73,9 +74,5 @@ public class Complejo {
     
     public float getAngulo() {
         return angulo;
-    }
-    
-    public void setAngulo(float angulo) {
-        this.angulo = angulo;
     }
 }
