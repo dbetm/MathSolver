@@ -1,5 +1,7 @@
 package general;
 
+import EcucionesDiferenciales.EcDiferencialesGUI;
+import Integrales.*;
 import complejos.CalculadoraGUI;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -34,9 +36,9 @@ public class MenuPrincipal extends javax.swing.JFrame implements Runnable {
         background.setVisible(true);
 
         //Inciciacion de imágenes de botones primarios
-        ProyectoUno.setIcon(new ImageIcon("img/Botones/BottonI(Sinseleccionar).png"));
-        ProyectoDos.setIcon(new ImageIcon("img/Botones/BottonII(Sinseleccionar).png"));
-        ProyectoTres.setIcon(new ImageIcon("img/Botones/BottonIII(Sinseleccionar).png"));
+        ProyectoUno.setIcon(new ImageIcon("img/Botones/BottonI(SinSeleccionar).png"));
+        ProyectoDos.setIcon(new ImageIcon("img/Botones/BottonII(SinSeleccionar).png"));
+        ProyectoTres.setIcon(new ImageIcon("img/Botones/BottonIII(SinSeleccionar).png"));
 
         //Los botones secundarios inician invisibles
         CalcComplejos.setVisible(false);
@@ -99,6 +101,11 @@ public class MenuPrincipal extends javax.swing.JFrame implements Runnable {
         B2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         B2.setForeground(new java.awt.Color(255, 255, 0));
         B2.setText("Ecuaciones");
+        B2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                B2ActionPerformed(evt);
+            }
+        });
 
         C1.setBackground(new java.awt.Color(0, 0, 0));
         C1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -113,6 +120,11 @@ public class MenuPrincipal extends javax.swing.JFrame implements Runnable {
         B3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         B3.setForeground(new java.awt.Color(255, 255, 0));
         B3.setText("Integrales");
+        B3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                B3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -142,7 +154,7 @@ public class MenuPrincipal extends javax.swing.JFrame implements Runnable {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(346, 346, 346)
                         .addComponent(jLabel1)))
-                .addContainerGap(266, Short.MAX_VALUE))
+                .addContainerGap(229, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,9 +184,9 @@ public class MenuPrincipal extends javax.swing.JFrame implements Runnable {
         //La imagen del proyecto uno cambia para que se vea mas grande
         ProyectoUno.setIcon(new ImageIcon("img/Botones/BottonI(Seleccionados).png"));
         //La imagen del proyectodos vuelve a su tamaño original
-        ProyectoDos.setIcon(new ImageIcon("img/Botones/BottonII(Sinseleccionar).png"));
+        ProyectoDos.setIcon(new ImageIcon("img/Botones/BottonII(SinSeleccionar).png"));
         //La imagen del proyectotres vuelve a su tamaño original
-        ProyectoTres.setIcon(new ImageIcon("img/Botones/BottonIII(Sinseleccionar).png"));
+        ProyectoTres.setIcon(new ImageIcon("img/Botones/BottonIII(SinSeleccionar).png"));
         CalcComplejos.setVisible(true);
         B3.setVisible(false);
         B2.setVisible(false);
@@ -190,9 +202,9 @@ public class MenuPrincipal extends javax.swing.JFrame implements Runnable {
 
     private void ProyectoTresMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ProyectoTresMouseMoved
         //La imagen del proyectouno vuelve a su tamaño original
-        ProyectoUno.setIcon(new ImageIcon("img/Botones/BottonI(Sinseleccionar).png"));
+        ProyectoUno.setIcon(new ImageIcon("img/Botones/BottonI(SinSeleccionar).png"));
         //La imagen del proyectodos vuelve a su tamaño original
-        ProyectoDos.setIcon(new ImageIcon("img/Botones/BottonII(Sinseleccionar).png"));
+        ProyectoDos.setIcon(new ImageIcon("img/Botones/BottonII(SinSeleccionar).png"));
         //La imagen del proyecto tres cambia para que se vea mas grande
         ProyectoTres.setIcon(new ImageIcon("img/Botones/BottonIII(Seleccionar).png"));
         CalcComplejos.setVisible(false);
@@ -204,16 +216,28 @@ public class MenuPrincipal extends javax.swing.JFrame implements Runnable {
     //Cuando el puntero esta encima del botón
     private void ProyectoDosMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ProyectoDosMouseMoved
         //La imagen del proyectouno vuelve a su tamaño original
-        ProyectoUno.setIcon(new ImageIcon("img/Botones/BottonI(Sinseleccionar).png"));
+        ProyectoUno.setIcon(new ImageIcon("img/Botones/BottonI(SinSeleccionar).png"));
         //La imagen del proyecto dos cambia para que se vea mas grande
         ProyectoDos.setIcon(new ImageIcon("img/Botones/BottonII(Seleccionar).png"));
         //La imagen del proyectotres vuelve a su tamaño original
-        ProyectoTres.setIcon(new ImageIcon("img/Botones/BottonIII(Sinseleccionar).png"));
+        ProyectoTres.setIcon(new ImageIcon("img/Botones/BottonIII(SinSeleccionar).png"));
         CalcComplejos.setVisible(false);
         B3.setVisible(true);
         B2.setVisible(true);
         C1.setVisible(false);
     }//GEN-LAST:event_ProyectoDosMouseMoved
+
+    private void B3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B3ActionPerformed
+        IntegralesGUI ING = new IntegralesGUI();
+        ING.setVisible(true);
+        ING.setLocationRelativeTo(this);
+        this.setVisible(false);
+    }//GEN-LAST:event_B3ActionPerformed
+
+    private void B2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B2ActionPerformed
+        EcDiferencialesGUI ED = new EcDiferencialesGUI();
+        ED.setVisible(true);
+    }//GEN-LAST:event_B2ActionPerformed
 
     /**
      * @param args the command line arguments
