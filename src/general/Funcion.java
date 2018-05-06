@@ -9,14 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import jme.Expresion;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
+
 
 /**
  *
@@ -25,8 +18,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 public class Funcion {
     public String funcion;
     public Expresion exp;
-    public XYSeriesCollection puntos;
-    public JFreeChart grafica=ChartFactory.createXYLineChart(funcion, "y", "x", puntos, PlotOrientation.VERTICAL, true, true, true);
+    
     
     
     public Funcion(String funcion) {
@@ -37,7 +29,7 @@ public class Funcion {
         //evaluar con otra funcion, esto cambi ala forama en la que se esta evaluando despues de hacer una resolucion 
         // se va a tener que buscar una nueva forma de hacer las cosas 
         exp = new Expresion(funcion);
-        puntos=new XYSeriesCollection();
+        
         //se crea una instancia de la clase Chart la cual nos permite graficar 
         
     }
@@ -116,120 +108,97 @@ public class Funcion {
     }
     // Esta funcion grafica la funcion y los limites de la integral osea la integral en si
     //de la expresion que se setea o se crea
-    public void graficar(double LimA,double LimB){
-        //ArrayList<dato> Lista= new ArrayList<>();
+    public ArrayList<dato> graficar(double LimA,double LimB){
+        ArrayList<dato> Lista= new ArrayList<>();
         
-        puntos.removeAllSeries();
+        
         double i=LimA;
         double j=0;
-        XYSeries serie = new XYSeries(funcion);
-        XYSeries A = new XYSeries(String.valueOf(LimA)+funcion);
-        XYSeries B = new XYSeries(String.valueOf(LimB)+funcion);
+        
         
         
         
             while(i<=LimB){
                 try{
-                    serie.add(i,Eval(i));
-                   // System.out.println(i+","+Eval(i));
+                    dato D = new dato(i,Eval(i));
+                    Lista.add(D);
                 
                 }catch(Exception e){}
                 i+=.01;
             }
-            
+            //Limete de de la izquierda 
             try{
                while(j<Eval(LimA+2)){
-                    A.add(LimA+2,j);
+                    dato D = new dato(i,Eval(i));
+                    Lista.add(D);
                    j+=.1;
                }
             }catch(Exception e){}
             j=0;
+            //LImite de la derecha
             try{
                while(j<Eval(LimB-2)){
-                    B.add(LimB-2,j);
+                    dato D = new dato(i,Eval(i));
+                    Lista.add(D);
                    j+=.1;
                }
             }catch(Exception e){}
             
             
-              
-        System.out.println(serie.isEmpty());
-        puntos.addSeries(serie);
-        puntos.addSeries(A);
-        puntos.addSeries(B);
-        System.out.println("hola");
-        grafica = ChartFactory.createXYLineChart(funcion, "y", "x", puntos, PlotOrientation.VERTICAL, true, true, true);
-        //return new ChartPanel(grafica);
-    }
-    
-    public JPanel graficarO(double LimA,double LimB){
-        //ArrayList<dato> Lista= new ArrayList<>();
-        double i=LimA;
-        double j=0;
-        XYSeries serie = new XYSeries(funcion);
-        XYSeries A = new XYSeries(String.valueOf(LimA));
-        XYSeries B = new XYSeries(String.valueOf(LimB));
-        
-        
-        
-            while(i<=LimB){
-                try{
-                    serie.add(i,Eval(i));
-                    System.out.println(i+","+Eval(i));
-                
-                }catch(Exception e){}
-                i+=.01;
-            }
-            
-            try{
-               while(j<Eval(LimA+2)){
-                    A.add(LimA+2,j);
-                   j+=.1;
-               }
-            }catch(Exception e){}
-            j=0;
-            try{
-               while(j<Eval(LimB-2)){
-                    B.add(LimB-2,j);
-                   j+=.1;
-               }
-            }catch(Exception e){}
-            
-            
-              
-        
-        
-        puntos.addSeries(serie);
-        puntos.addSeries(A);
-        puntos.addSeries(B);
-        return new ChartPanel(grafica);
-    }
-    ////Grafica una lista de cordenadas esta fincion es la que se usa en la graficacion de la solucion de la ecuacion 
-    //diferencial 
-    public void graficarE(ArrayList<dato> Lista){
+          
         
        
-        XYSeries serie = new XYSeries(funcion);
-        
-        try{
-             
-            for(int i=0;i<Lista.size();i++){
-                
-                serie.add(Lista.get(i).x,Lista.get(i).y);
-                System.out.println(Lista.get(i).y+","+Lista.get(i).x);
-                
-            }
-            
-        }catch(Exception e){}
-        
-        puntos.addSeries(serie);
-        
+        return Lista;
     }
+    
+//    public JPanel graficarO(double LimA,double LimB){
+//        //ArrayList<dato> Lista= new ArrayList<>();
+//        double i=LimA;
+//        double j=0;
+//        XYSeries serie = new XYSeries(funcion);
+//        XYSeries A = new XYSeries(String.valueOf(LimA));
+//        XYSeries B = new XYSeries(String.valueOf(LimB));
+//        
+//        
+//        
+//            while(i<=LimB){
+//                try{
+//                    serie.add(i,Eval(i));
+//                    System.out.println(i+","+Eval(i));
+//                
+//                }catch(Exception e){}
+//                i+=.01;
+//            }
+//            
+//            try{
+//               while(j<Eval(LimA+2)){
+//                    A.add(LimA+2,j);
+//                   j+=.1;
+//               }
+//            }catch(Exception e){}
+//            j=0;
+//            try{
+//               while(j<Eval(LimB-2)){
+//                    B.add(LimB-2,j);
+//                   j+=.1;
+//               }
+//            }catch(Exception e){}
+//            
+//            
+//              
+//        
+//        
+//        puntos.addSeries(serie);
+//        puntos.addSeries(A);
+//        puntos.addSeries(B);
+//        return new ChartPanel(grafica);
+//    }
+    ////Grafica una lista de cordenadas esta fincion es la que se usa en la graficacion de la solucion de la ecuacion 
+    //diferencial 
+    
     //Con esta funcion es la que igualamos un JPanel de una GUI y muestre las graficas 
     // es como el lienzo 
-    public JPanel obtenerGrafica() {
-        return new ChartPanel(grafica);
-    }
+   
     
 
     

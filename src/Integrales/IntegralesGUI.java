@@ -15,15 +15,17 @@ import javax.swing.JLabel;
  * @author wolfteinter
  */
 public class IntegralesGUI extends javax.swing.JFrame {
-
+    //desde aqui va estar la grafica y s eva a mandar lo que tie e que estar haciendo 
+    //osea desde la funcion creada 
     /**
      * Creates new form IntegralesGUI
      */
     
     //Se crea una instancia de la clase funcion la cual pide como parametro un string 
     //en este caso como inicio esta la funcion x
-    Funcion f=new Funcion("x");
+    //Funcion f=new Funcion("x");
     JLabel background;
+    GraficarI grafica = new GraficarI("Integrales");
     public IntegralesGUI() {
         initComponents();
         this.setResizable(false);
@@ -54,8 +56,9 @@ public class IntegralesGUI extends javax.swing.JFrame {
         VResultado = new javax.swing.JTextField();
         Calcular = new javax.swing.JButton();
         aviso = new javax.swing.JLabel();
-        jPanel1 = f.obtenerGrafica();
+        jPanel1 = grafica.obtenerGrafica();
         jLabel3 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,6 +92,13 @@ public class IntegralesGUI extends javax.swing.JFrame {
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Integral.jpg"))); // NOI18N
 
+        jButton1.setText("Borrar Graficas");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -96,11 +106,6 @@ public class IntegralesGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(62, 62, 62)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(LimB, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -122,7 +127,14 @@ public class IntegralesGUI extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(VResultado, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(162, 162, 162))))
+                        .addGap(162, 162, 162))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,7 +161,9 @@ public class IntegralesGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -174,9 +188,9 @@ public class IntegralesGUI extends javax.swing.JFrame {
                 
                 //Esta funcion solo setea la funcion en la clase pero no en la expresion que en si es la que evalua la funcion 
                 // va a tener que ser como esta anteriormente que es crando una instancia cada vez que se llama a la funcion 
-                Funcion f1= new Funcion(VFuncion.getText());
-                f=f1;
-                System.out.println();
+                Funcion f= new Funcion(VFuncion.getText());
+                
+                grafica.agregarGrafica(f.funcion,f.graficar(Double.parseDouble(LimA.getText())-2,Double.parseDouble(LimB.getText())+2));
             
                 // pero esto rompe la foma en la que s egrafica la funcion ya que necesita estar un instancia y solo una.
                 // se va a tener que buscar otra forma
@@ -185,7 +199,7 @@ public class IntegralesGUI extends javax.swing.JFrame {
                 System.out.println(f.funcion);
                 //se llama a la funcion graficar la cual grafica la funcion
                 //esto no cambia con el problema permanece constante 
-                f.graficar(Double.parseDouble(LimA.getText())-2,Double.parseDouble(LimB.getText())+2);
+                
                 //Se muestra el resultado de la la integran atraves de la funcion integral que tiene la clase funcion 
                 VResultado.setText(String.valueOf(f.Integral(Double.parseDouble(LimA.getText()),Double.parseDouble(LimB.getText()),1000)));
                 
@@ -196,6 +210,10 @@ public class IntegralesGUI extends javax.swing.JFrame {
         
     
     }//GEN-LAST:event_CalcularActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        grafica.BorrarGrafica();
+    }//GEN-LAST:event_jButton1ActionPerformed
     //Determina si una cadena es solo numerica
     private static boolean isNumeric(String cadena){
 	try {
@@ -247,6 +265,7 @@ public class IntegralesGUI extends javax.swing.JFrame {
     private javax.swing.JTextField VFuncion;
     private javax.swing.JTextField VResultado;
     private javax.swing.JLabel aviso;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
