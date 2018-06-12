@@ -237,6 +237,7 @@ public class MenuPrincipal extends javax.swing.JFrame implements Runnable {
     private void B2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B2ActionPerformed
         EcDiferencialesGUI ED = new EcDiferencialesGUI();
         ED.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_B2ActionPerformed
 
     /**
@@ -264,6 +265,10 @@ public class MenuPrincipal extends javax.swing.JFrame implements Runnable {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MenuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>

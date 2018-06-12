@@ -25,7 +25,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 public class GraficarI {
     JFreeChart grafica;
     public XYSeriesCollection puntos=new XYSeriesCollection();
-    
+    int contador;
     public GraficarI(String name) {
         
         grafica=ChartFactory.createXYLineChart(name, "x", "y", puntos, PlotOrientation.VERTICAL, true, true, true);
@@ -41,7 +41,7 @@ public class GraficarI {
         
         
         
-       XYSeries serie = new XYSeries(id);
+       XYSeries serie = new XYSeries("("+contador+")"+id);
         
         try{
              
@@ -55,6 +55,7 @@ public class GraficarI {
         }catch(Exception e){}
         
         puntos.addSeries(serie);
+        contador++;
     }
   
     public void BorrarGrafica() {
